@@ -3,6 +3,14 @@
 These are intended to supplement the live tutorial
 and may not contain sufficient detail for self-guided learning.
 
+
+## STILL TODO
+
+1. Polish the final version of this w/flow `git clone --branch nf2023_dev https://github.com/rsuchecki/nextflow-walkthrough.git`
+2. Delete intermediate steps and create dedicated branches
+3. Update text below, e.g. replace `mv main.nf step1.nf && git checkout bis2021_step_1` with `mv main.nf step1.nf && git checkout nf2023_step_1`
+
+
 ## Basics
 
 1. ssh to petrichor
