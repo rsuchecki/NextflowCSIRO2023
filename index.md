@@ -1,17 +1,15 @@
-# Notes for Nextflow tutorial at BioInfoSummer2021
+# Notes for Nextflow tutorial 
 
 These are intended to supplement the live tutorial
 and may not contain sufficient detail for self-guided learning.
 
 ## Basics
 
-1. Get login details from organizers and ssh to zeus
-2. We will work in scratch space
+1. ssh to petrichor
+2. You will work in your scratch space i.e. `/scratch3/$USER`
 
 ```sh
-cd /scratch/courses01
-mkdir -p $USER
-cd $USER
+cd /scratch3/$USER
 ```
 
 
@@ -19,6 +17,14 @@ cd $USER
 
 ```sh
 nextflow run rsuchecki/hello -revision master 
+```
+
+This executed a minimal NF workflow, but we are still running everything on the login node - no different from executing it on your own laptop.
+
+In the next example, we'd like NF to submit each "hello" task to our cluster's Slurm scheduler as a separate batch job.
+We now have accounting on the cluster so for that to work, we need to make sure the scheduler "knows" which project code 
+
+```sh
 # compare
 nextflow run rsuchecki/hello -revision slurm
 ```
@@ -41,10 +47,9 @@ We are developing a Nextflow DSL2 workflow (loosely) based on [this bash script]
 ## Data and env modules prep
 
 ```sh
-cd /scratch/courses01/$USER
+cd /scratch3/$USER
 git clone --branch bis2021_step_0 https://github.com/rsuchecki/nextflow-walkthrough.git
 cd nextflow-walkthrough
-module load nextflow singularity
 ```
 
 We can **either** use
@@ -53,19 +58,19 @@ We can **either** use
 nextflow run setup_data.nf 
 ```
 
-**or** just symlink to the data previously downloaded and available on the group drive.
+**or** just copy the data previously downloaded and made available on the login node.
 
 ```sh
-ln -s /group/courses01/amsi/data/
+cp -r /tmp/NF_WORKSHOP/data ./
 ```
 
 We can also get the local copy of the Singularity image we will be using. 
 
 ```sh
-ln -s /group/courses01/amsi/singularity ./singularity-images
+cp -r /tmp/NF_WORKSHOP/...simg ./singularity-images
 ```
 
-Normally nextflow would pull the image from the remote, 
+Normally Nextflow would pull the image from the remote, 
 but we want to avoid any issues with multiple concurrent pulls in the context of this workshop. 
 
 ## Additional files etc.
@@ -74,7 +79,7 @@ Note that some additional files are included and may be more complex than necess
 This content, especially in `nextflow.config` is a mix of settings
 
 *  designed to aid teaching
-*  specific to pawsey zeus
+*  specific to petrichor
 *  basics you may find convenient 
 
 I hope to address the important sections, especially the [singularity execution profile](https://github.com/rsuchecki/nextflow-walkthrough/blob/bb83b4b8090f52676a93db825b4fd578e6854c5d/nextflow.config#L36-L51)
@@ -109,7 +114,7 @@ Execute `nextflow run main.nf`
 2. Include `publishDir` directive in `MULTIQC` to copy results to `results/multiqc`
 3. Combine them in a workflow, reading from `ReadsForQcChannel`
 
-Execute `nextflow run main.nf -profile singularity,zeus -resume --n 4`, you may also increase `n` (32 for all files to be precessed) but we can also do that later. 
+Execute `nextflow run main.nf -profile singularity,slurm -resume --n 4`, you may also increase `n` (32 for all files to be precessed) but we can also do that later. 
 
 **If** the above tasks caused you some un-recoverable issues you can rename or delete your
 `main.nf` and check-out a revision where the above steps have been captured,
@@ -121,7 +126,7 @@ Execute `nextflow run main.nf -profile singularity,zeus -resume --n 4`, you may 
 2. Add process definition for `BWA_INDEX` 
 3. Add `BWA_INDEX` call to workflow 
 
-Execute `nextflow run main.nf -profile singularity,zeus -resume --n 4`
+Execute `nextflow run main.nf -profile singularity,slurm -resume --n 4`
 
 **If** the above tasks caused you some un-recoverable issues you can rename or delete your
 `main.nf` and check-out a revision where the above steps have been captured,
@@ -134,7 +139,7 @@ Execute `nextflow run main.nf -profile singularity,zeus -resume --n 4`
 3.  Add process definition for TRIM_PE (Trimmomatic)
 4.  Add `TRIM_PE` call to workflow 
 
-Execute `nextflow run main.nf -profile singularity,zeus -resume --n 4`
+Execute `nextflow run main.nf -profile singularity,slurm -resume --n 4`
 
 **If** the above tasks caused you some un-recoverable issues you can rename or delete your
 `main.nf` and check-out a revision where the above steps have been captured,
@@ -145,7 +150,7 @@ Execute `nextflow run main.nf -profile singularity,zeus -resume --n 4`
 1. Add process definition for `BWA_ALIGN` 
 2. Add `BWA_ALIGN` call to workflow 
    
-Execute `nextflow run main.nf -profile singularity,zeus -resume --n 4`, you may also increase `n` (32 for all files to be precessed).
+Execute `nextflow run main.nf -profile singularity,slurm -resume --n 4`, you may also increase `n` (32 for all files to be precessed).
 
 **If** the above tasks caused you some un-recoverable issues you can rename or delete your
 `main.nf` and check-out a revision where the above steps have been captured,
@@ -157,7 +162,7 @@ Execute `nextflow run main.nf -profile singularity,zeus -resume --n 4`, you may 
 1. Add `MERGE_BAMS` process such that `samtools merge` is used (with 2 CPU threads) to merge per sample BAMs into one.
 2. Add `MERGE_BAMS` call to workflow 
 
-Execute `nextflow run main.nf -profile singularity,zeus -resume --n 32`
+Execute `nextflow run main.nf -profile singularity,slurm -resume --n 16`
 
 **If** the above tasks caused you some un-recoverable issues you can rename or delete your
 `main.nf` and check-out a revision where the above steps have been captured,
