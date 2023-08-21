@@ -84,7 +84,7 @@ cp -r /tmp/NF_WORKSHOP/data ./
 
 (ask the trainer if the data is not available at this location)
 
-We can also get the local copy of the Singularity image we can use as an alternative to modules. 
+We can also get the local copy of the Singularity image we can use as an alternative to environment modules. 
 
 ```sh
 cp -r /tmp/NF_WORKSHOP/rsuchecki-nextflow-embl-abr-webinar.img ./singularity-images
@@ -133,7 +133,7 @@ Execute `nextflow run main.nf`
 2. Include `publishDir` directive in `MULTIQC` to copy results to `results/multiqc`
 3. Combine them in a workflow, reading from `ReadsForQcChannel`
 
-Execute `nextflow run main.nf -profile singularity,slurm -resume --n 4`, 
+Execute `nextflow run main.nf -profile modules,slurm -resume --n 4`, 
 you may also increase `n` (16 for all files to be processed) but we can also do that later. 
 
 **If** the above tasks caused you some un-recoverable issues you can rename or delete your
@@ -146,7 +146,7 @@ you may also increase `n` (16 for all files to be processed) but we can also do 
 2. Add process definition for `BWA_INDEX` 
 3. Add `BWA_INDEX` call to workflow 
 
-Execute `nextflow run main.nf -profile singularity,slurm -resume --n 4`
+Execute `nextflow run main.nf -profile modules,slurm -resume --n 4`
 
 **If** the above tasks caused you some un-recoverable issues you can rename or delete your
 `main.nf` and check-out a revision where the above steps have been captured,
@@ -159,7 +159,7 @@ Execute `nextflow run main.nf -profile singularity,slurm -resume --n 4`
 3.  Add process definition for TRIM_PE (Trimmomatic)
 4.  Add `TRIM_PE` call to workflow 
 
-Execute `nextflow run main.nf -profile singularity,slurm -resume --n 4`
+Execute `nextflow run main.nf -profile modules,slurm -resume --n 4`
 
 **If (and only if)** the above tasks caused you some un-recoverable issues you can rename or delete your
 `main.nf` and check-out a revision where the above steps have been captured,
@@ -170,7 +170,7 @@ Execute `nextflow run main.nf -profile singularity,slurm -resume --n 4`
 1. Add process definition for `BWA_ALIGN` 
 2. Add `BWA_ALIGN` call to workflow 
    
-Execute `nextflow run main.nf -profile singularity,slurm -resume --n 4`, you may also increase `n` (16 for all files to be processed).
+Execute `nextflow run main.nf -profile modules,slurm -resume --n 4`, you may also increase `n` (16 for all files to be processed).
 
 **If (and only if)** the above tasks caused you some un-recoverable issues you can rename or delete your
 `main.nf` and check-out a revision where the above steps have been captured,
@@ -182,7 +182,7 @@ Execute `nextflow run main.nf -profile singularity,slurm -resume --n 4`, you may
 1. Add `MERGE_BAMS` process such that `samtools merge` is used (with 2 CPU threads) to merge per sample BAMs into one.
 2. Add `MERGE_BAMS` call to workflow 
 
-Execute `nextflow run main.nf -profile singularity,slurm -resume --n 16`
+Execute `nextflow run main.nf -profile modules,slurm -resume --n 16`
 
 **If** the above tasks caused you some un-recoverable issues you can rename or delete your
 `main.nf` and check-out a revision where the above steps have been captured,
