@@ -8,9 +8,7 @@ and may not contain sufficient detail for self-guided learning.
 
 1. Polish the final version of this w/flow `git clone --branch nf2023_dev https://github.com/rsuchecki/nextflow-walkthrough.git`
 2. Delete intermediate steps and create dedicated branches
-3. Update text below, e.g. replace `mv main.nf step1.nf && git checkout bis2021_step_1` with `mv main.nf step1.nf && git checkout nf2023_step_1`
-4. Decide on `resume` - true or false? 
-5. Alternative syntax styles in workflow definition
+3. Alternative syntax styles in workflow definition?
 
 
 ## Basics
@@ -47,7 +45,7 @@ We're now ready to run the cluster-enabled version of the "hello workflow".
 nextflow run rsuchecki/hello -revision slurm
 ```
 
-Want a closer look? `$NXF_HOME/assets/rsuchecki/hello/main.nf`.
+Want a closer look? `~/.nextflow/assets/rsuchecki/hello/main.nf`.
 
 For editing and trying things out it is better to get a local copy: 
 
@@ -60,9 +58,10 @@ nextflow run main.nf
 
 ## Example workflow 
 
-We are developing a Nextflow DSL2 workflow (loosely) based on [this bash script](https://github.com/nathanhaigh/snakemake_template/blob/final/analysis.sh)
+We are developing a Nextflow DSL2 workflow (loosely) based on [this bash script](https://github.com/nathanhaigh/snakemake_template/blob/final/analysis.sh).
+Feel free to grab a copy for reference `wget https://raw.githubusercontent.com/nathanhaigh/snakemake_template/final/analysis.sh`.
 
-## Data and env modules prep
+## Data and singularity container image prep
 
 ```sh
 cd /scratch3/$USER
@@ -87,7 +86,8 @@ cp -r /tmp/NF_WORKSHOP/data ./
 We can also get the local copy of the Singularity image we can use as an alternative to environment modules. 
 
 ```sh
-cp -r /tmp/NF_WORKSHOP/rsuchecki-nextflow-embl-abr-webinar.img ./singularity-images
+mkdir -p ./singularity-images
+cp /tmp/NF_WORKSHOP/rsuchecki-nextflow-embl-abr-webinar.img ./singularity-images/
 ```
 
 Normally Nextflow would pull the image from the remote, 
@@ -131,14 +131,41 @@ Execute `nextflow run main.nf`
 
 1. Add process definitions for `FASTQC` and `MULTIQC`
 2. Include `publishDir` directive in `MULTIQC` to copy results to `results/multiqc`
-3. Combine them in a workflow, reading from `ReadsForQcChannel`
+3. Add `module` directives to ensure the required software is available 
+4. Combine them in a workflow, reading from `ReadsForQcChannel`
 
-Execute `nextflow run main.nf -profile modules,slurm -resume --n 4`, 
+Execute `nextflow run main.nf -profile slurm -resume --n 4`, 
 you may also increase `n` (16 for all files to be processed) but we can also do that later. 
 
 **If** the above tasks caused you some un-recoverable issues you can rename or delete your
 `main.nf` and check-out a revision where the above steps have been captured,
 `mv main.nf step2.nf && git checkout nf2023_step_2`
+
+### Nextflow configuration
+
+So far, to make sure we have the required software available,
+we either loaded modules on the command line (e.g. `module load fastqc/0.11.9`),
+or specified them in processes' directives block, e.g.
+
+```
+process FASTQC {
+  module 'fastqc/0.11.9'
+```
+
+We can now look into how configuration, such as software module specification 
+can be separated from pipeline logic.
+
+Your task is to use process selectors (`withName` and/or `withLabel`) 
+to ensure that appropriate module is loaded for each of your processes.
+You will need to edit `nextflow.config` and either add the required configuration lines
+directly under `modules` profile, or, preferably, create a dedicated configuration file 
+`conf/modules.config` and specify the modules configuration there.
+Use `includeConfig` keyword to "source" the created file under `modules` profile in `nextflow.config`.
+
+You should now be able to use the modules profile when running the pipeline
+
+Execute: `nextflow run main.nf -profile modules,slurm -resume --n 4`
+
 
 ### BWA_INDEX
 
