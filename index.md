@@ -4,13 +4,6 @@ These are intended to supplement the live tutorial
 and may not contain sufficient detail for self-guided learning.
 
 
-## STILL TODO
-
-1. Polish the final version of this w/flow `git clone --branch nf2023_dev https://github.com/rsuchecki/nextflow-walkthrough.git`
-2. Delete intermediate steps and create dedicated branches
-3. Alternative syntax styles in workflow definition?
-
-
 ## Basics
 
 1. ssh to petrichor
@@ -19,7 +12,6 @@ and may not contain sufficient detail for self-guided learning.
 ```sh
 cd /scratch3/$USER
 ```
-
 
 ## Hello world example
 
@@ -95,11 +87,11 @@ but we want to avoid any issues with multiple concurrent pulls in the context of
 
 ## Additional files etc.
 
-Note that some additional files are included and may be more complex than necessary for this workflow. 
+Note that some additional files are included 
+and may be more complex than necessary for this workflow. 
 This content, especially in `nextflow.config` is a mix of settings
 
 *  designed to aid teaching
-*  specific to petrichor
 *  basics/boilerplate you may find convenient 
 
 I hope to address the important sections, especially `params` definitions and execution `profiles`.
@@ -123,10 +115,6 @@ so the contents on the day may differ.
 Execute `nextflow run main.nf`
 
 
-**If (and only if)** the above tasks caused you some un-recoverable issues you can rename or delete your
-`main.nf` and check-out a revision where the above steps have been captured,
-`mv main.nf step1.nf && git checkout nf2023_step_1`
-
 ### FASTQC & MULIQC
 
 1. Add process definitions for `FASTQC` and `MULTIQC`
@@ -137,9 +125,10 @@ Execute `nextflow run main.nf`
 Execute `nextflow run main.nf -profile slurm -resume --n 4`, 
 you may also increase `n` (16 for all files to be processed) but we can also do that later. 
 
-**If** the above tasks caused you some un-recoverable issues you can rename or delete your
+
+**If (and only if)** the above tasks caused you some un-recoverable issues you can rename or delete your
 `main.nf` and check-out a revision where the above steps have been captured,
-`mv main.nf step2.nf && git checkout nf2023_step_2`
+`mv main.nf step1.nf && git checkout nf2023_step_1`
 
 ### Nextflow configuration
 
@@ -166,6 +155,9 @@ You should now be able to use the modules profile when running the pipeline
 
 Execute: `nextflow run main.nf -profile modules,slurm -resume --n 4`
 
+**If** the above tasks caused you some un-recoverable issues you can rename or delete your
+`main.nf` and check-out a revision where the above steps have been captured,
+`mv main.nf step2.nf && git checkout nf2023_step_2`
 
 ### BWA_INDEX
 
@@ -219,7 +211,7 @@ Execute `nextflow run main.nf -profile modules,slurm -resume --n 16`
 
 ```sh
 mv main.nf nextsteps.nf
-git checkout nf2023
+git checkout nf2023_alt_wflow_syntax
 ```
 
 Refer to comments in the `workflow { }` block.
